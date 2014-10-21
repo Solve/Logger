@@ -1,0 +1,23 @@
+{
+    "name": "solve/logger",
+    "type": "library",
+    "description": " - [ Logger ] class for string manipulating",
+    "keywords": ["logger"],
+    "homepage": "http://github.com/solve/logger",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sergey Evtushenko",
+            "email": "s.evtyshenko@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "solve/storage": "*"
+    },
+    "autoload": {
+        "psr-0": { "Solve\\Logger\\": "" }
+    },
+    "target-dir": "Solve/Logger"
+}
