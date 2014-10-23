@@ -1,8 +1,8 @@
 {
     "name": "solve/logger",
     "type": "library",
-    "description": " - [ Logger ] class for string manipulating",
-    "keywords": ["logger"],
+    "description": " - [ Logger ]",
+    "keywords": ["logger", "logs", "log"],
     "homepage": "http://github.com/solve/logger",
     "license": "MIT",
     "authors": [

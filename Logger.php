@@ -21,70 +21,76 @@ namespace Solve\Debug\Logger;
 
 class Logger {
 
-	const NAMESPACE_SYSTEM            = 'system';
-	const NAMESPACE_PROJECT           = 'project';
-	const NAMESPACE_DB                = 'db';
+    const NAMESPACE_SYSTEM      = 'system';
+    const NAMESPACE_APPLICATION = 'application';
+    const NAMESPACE_FRAMEWORK   = 'framework';
+    const NAMESPACE_DB          = 'db';
 
-	private $_logs = array();
-	private $_logFolder = '';
+    private $_logs     = array();
+    private $_logsPath = '';
 
-	public function add($message, $namespace = self::NAMESPACE_PROJECT) {
-		if (empty($this->_logs[$namespace]))
-			$this->_logs[$namespace] = array();
+    public function add($message, $namespace = self::NAMESPACE_APPLICATION) {
+        if (empty($this->_logs[$namespace])) {
+            $this->_logs[$namespace] = array();
+        }
 
-		$this->_logs[$namespace][] = array(
-			'message'   => $message,
-			'namespace' => $namespace,
-			'datetime'  => date('d.m.Y H:i:s')
-		);
+        $this->_logs[$namespace][] = array(
+            'message'   => $message,
+            'namespace' => $namespace,
+            'datetime'  => date('d.m.Y H:i:s') . substr((string)microtime(), 1, 5)
+        );
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function get($namespace = self::NAMESPACE_PROJECT) {
-		if (!isset($this->_logs[$namespace])) {
-			new \Exception('Invalid namespace: ' . $namespace);
-		}
+    public function getList($namespace = self::NAMESPACE_APPLICATION) {
+        return empty($this->_logs[$namespace]) ? array() : $this->_logs[$namespace];
+    }
 
-		return $this->_logs[$namespace];
-	}
+    public function getLast($namespace = self::NAMESPACE_APPLICATION) {
+        return empty($this->_logs[$namespace]) ? null : end($this->_logs[$namespace]);
+    }
 
-	public function getAll() {
-		return $this->_logs;
-	}
+    public function hasLogs($namespace = self::NAMESPACE_APPLICATION) {
+        return !empty($this->_logs[$namespace]);
+    }
 
-	public function saveToFile($namespaces = null) {
-		if ($namespaces && !is_array($namespaces)) {
-			new \Exception('Namespaces [' . $namespaces . '] should be an array');
-		} else {
-			$namespaces = array_keys($this->_logs);
-		}
+    public function getListWithNamespaces() {
+        return $this->_logs;
+    }
 
-		if (!is_dir($this->_logFolder)) {
-			mkdir($this->_logFolder, 0777, true);
-			chmod($this->_logFolder, 0777);
-		}
+    public function save($namespaces = null) {
+        if ($namespaces && !is_array($namespaces)) {
+            new \Exception('Namespaces [' . $namespaces . '] should be an array');
+        } else {
+            $namespaces = array_keys($this->_logs);
+        }
 
-		foreach ($namespaces as $namespace) {
-			$h = fopen($this->_logFolder . $namespace . '.txt', 'a+');
-			foreach ($this->_logs[$namespace] as $s) {
-				fputs($h, $s['datetime'] . ' ' . $s['message'] . "\n");
-			}
-			$this->_logs[$namespace] = array();
-			fclose($h);
-		}
-	}
+        if (!is_dir($this->_logsPath)) {
+            mkdir($this->_logsPath, 0777, true);
+            chmod($this->_logsPath, 0777);
+        }
 
-	public function setLogFolder($folder) {
-		$this->_logFolder = $folder;
-	}
+        foreach ($namespaces as $namespace) {
+            $h = fopen($this->_logsPath . $namespace . '.txt', 'a+');
+            foreach ($this->_logs[$namespace] as $s) {
+                fputs($h, $s['datetime'] . ' ' . $s['message'] . "\n");
+            }
+            $this->_logs[$namespace] = array();
+            fclose($h);
+        }
+    }
 
-	public function getLogFolder() {
-		return $this->_logFolder;
-	}
+    public function setLogsPath($folder) {
+        $this->_logsPath = $folder;
+    }
 
-	public function __destructor() {
-		$this->saveToFile();
-	}
+    public function getLogsPath() {
+        return $this->_logsPath;
+    }
+
+    public function __destructor() {
+        $this->save();
+    }
 
 } 

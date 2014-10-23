@@ -15,22 +15,36 @@ require_once __DIR__.'/../Logger.php';
 
 class LoggerTest extends \PHPUnit_Framework_TestCase {
 
-	public function testMain(){
-		$this->assertTrue(true, 'Start test');
-
-		date_default_timezone_set( 'Europe/Kiev');
-
+	public function testMain() {
 		$logger = new Logger();
+		$this->assertFalse($logger->hasLogs(), 'has logs is false');
+
 		$logger->add('Start log');
-		$logger->get();
-		$logger->getAll();
+		$this->assertContains('Start log', $logger->getLast(), 'getLast default log');
+		$this->assertCount(1, $logger->getList(), 'getList count is one');
+		$this->assertTrue($logger->hasLogs(), 'has logs is true');
 
-		$this->assertEquals('', $logger->getLogFolder(),'Log folder is empty');
-		$logger->setLogFolder('asserts/');
-		$this->assertEquals('asserts/', $logger->getLogFolder(),'Log folder set');
+		$logger->add('executing', Logger::NAMESPACE_DB);
+		$this->assertArrayHasKey(Logger::NAMESPACE_DB, $logger->getListWithNamespaces(), 'db record added');
 
-		$logger->saveToFile();
+		$this->assertEquals('', $logger->getLogsPath(),'Log folder is empty');
+
+		$logsPath = __DIR__ . '/tmp/';
+		$logger->setLogsPath($logsPath);
+		$this->assertEquals($logsPath, $logger->getLogsPath(),'Log folder set');
+
+		$logger->save();
+		$this->assertFileExists($logsPath . Logger::NAMESPACE_APPLICATION . '.txt', 'application.txt created');
 	}
+
+	public static function tearDownAfterClass() {
+		$filesToDelete = GLOB(__DIR__ . '/tmp/*.txt');
+		foreach($filesToDelete as $filePath) {
+			unlink($filePath);
+		}
+		rmdir(__DIR__ . '/tmp/');
+	}
+
 
 }
  
