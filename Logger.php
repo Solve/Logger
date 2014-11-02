@@ -89,7 +89,7 @@ class Logger {
         return $this->_logsPath;
     }
 
-    public function __destructor() {
+    public function __destruct() {
         $this->save();
     }
 
