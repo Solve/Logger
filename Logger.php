@@ -8,7 +8,7 @@
  */
 
 
-namespace Solve\Debug\Logger;
+namespace Solve\Logger;
 
 /**
  * Class Logger
