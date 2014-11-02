@@ -82,7 +82,9 @@ class Logger {
     }
 
     public function setLogsPath($folder) {
+        if ($folder[strlen($folder)-1] !== DIRECTORY_SEPARATOR) $folder .= DIRECTORY_SEPARATOR;
         $this->_logsPath = $folder;
+        return $this;
     }
 
     public function getLogsPath() {
