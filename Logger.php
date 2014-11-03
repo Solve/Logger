@@ -27,7 +27,7 @@ class Logger {
     const NAMESPACE_DB          = 'db';
 
     private $_logs     = array();
-    private $_logsPath = '';
+    private $_logsPath = null;
 
     public function add($message, $namespace = self::NAMESPACE_APPLICATION) {
         if (empty($this->_logs[$namespace])) {
@@ -65,7 +65,10 @@ class Logger {
         } else {
             $namespaces = array_keys($this->_logs);
         }
-
+        if (empty($this->_logsPath)) {
+            trigger_error('Logs path are not set', E_USER_WARNING);
+            return true;
+        }
         if (!is_dir($this->_logsPath)) {
             mkdir($this->_logsPath, 0777, true);
             chmod($this->_logsPath, 0777);
