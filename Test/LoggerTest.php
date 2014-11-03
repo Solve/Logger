@@ -34,11 +34,11 @@ class LoggerTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($logsPath, $logger->getLogsPath(),'Log folder set');
 
 		$logger->save();
-		$this->assertFileExists($logsPath . Logger::NAMESPACE_APPLICATION . '.txt', 'application.txt created');
+		$this->assertFileExists($logsPath . Logger::NAMESPACE_APPLICATION . '.log', 'application.txt created');
 	}
 
 	public static function tearDownAfterClass() {
-		$filesToDelete = GLOB(__DIR__ . '/tmp/*.txt');
+		$filesToDelete = GLOB(__DIR__ . '/tmp/*.log');
 		foreach($filesToDelete as $filePath) {
 			unlink($filePath);
 		}

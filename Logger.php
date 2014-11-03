@@ -21,9 +21,8 @@ namespace Solve\Logger;
 
 class Logger {
 
-    const NAMESPACE_SYSTEM      = 'system';
     const NAMESPACE_APPLICATION = 'application';
-    const NAMESPACE_FRAMEWORK   = 'framework';
+    const NAMESPACE_KERNEL      = 'kernel';
     const NAMESPACE_DB          = 'db';
 
     private $_logs     = array();
@@ -75,7 +74,7 @@ class Logger {
         }
 
         foreach ($namespaces as $namespace) {
-            $h = fopen($this->_logsPath . $namespace . '.txt', 'a+');
+            $h = fopen($this->_logsPath . $namespace . '.log', 'a+');
             foreach ($this->_logs[$namespace] as $s) {
                 fputs($h, $s['datetime'] . ' ' . $s['message'] . "\n");
             }
